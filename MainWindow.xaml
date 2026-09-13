@@ -1,0 +1,183 @@
+﻿<Window x:Class="PcHealthHub.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PcHealthHub"
+        mc:Ignorable="d"
+        Title="PC Health Hub" Height="600" Width="800"
+        Background="#1E1E1E" Foreground="White">
+    
+    <Window.Resources>
+
+        <Style x:Key="ReadOnlyDashboardList" TargetType="ListView">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        </Style>
+
+        <Style x:Key="PercentProgressBar" TargetType="ProgressBar">
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Foreground" Value="#007ACC"/>
+            <Setter Property="Background" Value="#3A3A3D"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="ProgressBar">
+
+                        <Grid>
+
+                            <!-- Background -->
+                            <Border
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"/>
+
+                            <!-- Filled portion -->
+                            <Border
+                            x:Name="PART_Indicator"
+                            HorizontalAlignment="Left"
+                            Background="{TemplateBinding Foreground}"
+                            CornerRadius="4"/>
+
+                            <!-- Percentage text -->
+                            <TextBlock
+                            Text="{Binding RelativeSource={RelativeSource TemplatedParent},
+                                           Path=Value,
+                                           StringFormat={}{0:F0}%}"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+
+                        </Grid>
+
+                    </ControlTemplate>
+
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+
+        <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="System Health Dashboard" FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
+
+        <!-- Content Cards Panel -->
+        <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,10" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+            <!-- OS & Machine Info -->
+            <Border Background="#2D2D30" BorderThickness="2,2,2,2" BorderBrush="SlateGray" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Machine Details" FontWeight="Bold" FontSize="14" Foreground="#007ACC"/>
+                    <TextBlock x:Name="TxtMachineName" Text="{Binding ComputerInfo.MachineName, StringFormat='Computer Name: {0}'}" Margin="0,5,0,0"/>
+                    <TextBlock x:Name="TxtOsVersion" Text="{Binding ComputerInfo.OsVersion, StringFormat='OS Version: {0}'}"/>
+                    <TextBlock x:Name="TxtProcessorCount" Text="{Binding ComputerInfo.Processors, StringFormat='Physical Processors: {0}'}"/>
+                </StackPanel>
+            </Border>
+
+            <!--Process Info-->
+                <Border Background="#2D2D30" BorderThickness="2,0,2,2" BorderBrush="SlateGray" Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="10 Highest Memory Processes" FontWeight="Bold" FontSize="14" Foreground="#007ACC"/>
+                        <ListView  x:Name="ProcessListView"
+                                    Height="Auto"
+                                    ItemsSource="{Binding Processes}"
+                                    Style="{StaticResource ReadOnlyDashboardList}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridView.ColumnHeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="Padding" Value="5"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                        </Style>
+                                    </GridView.ColumnHeaderContainerStyle>
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
+                                        <GridViewColumn Header="CPU %" Width="Auto" DisplayMemberBinding="{Binding CpuUsage, StringFormat='{}{0}%'}"/>
+                                        <GridViewColumn Header="Memory" Width="Auto" DisplayMemberBinding="{Binding MemoryUsage, StringFormat='{}{0} MB'}"/>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </StackPanel>
+                </Border>
+
+                <!-- Drive Space Info -->
+                <Border Background="#2D2D30" BorderThickness="2,0,2,0" BorderBrush="SlateGray" Padding="15">
+                    <StackPanel>
+                        <TextBlock x:Name="TxtDriveName" Text="{Binding ComputerInfo.DriveName}" FontWeight="Bold" FontSize="14" Foreground="#007ACC"/>
+
+                        <Grid Margin="0,8,0,5">
+
+                            <ProgressBar 
+                                x:Name="PbDriveSpace" 
+                                Height="24"
+                                Minimum="0"
+                                Maximum="100"
+                                Value="{Binding ComputerInfo.PercentUsed}"
+                                Foreground="#007ACC"
+                                Background="#3A3A3D"/>
+
+                            <TextBlock
+                                Text="{Binding ComputerInfo.PercentUsed, StringFormat={}{0:F0}%}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="White"
+                                FontWeight="Bold"
+                                IsHitTestVisible="False"/>
+
+                        </Grid>
+
+                        <TextBlock x:Name="TxtDriveSpace" Text="{Binding ComputerInfo.FreeSpace, StringFormat='{}{0} GB Available'}" FontWeight="Normal" FontSize="12" Foreground="White"/>
+                        <TextBlock x:Name="TxtDriveDirectories" Text="{Binding ComputerInfo.Directories, StringFormat='Directories In Drive: {0}'}" FontWeight="Normal" FontSize="12" Foreground="White"/>
+                        <TextBlock x:Name="TxtDriveFiles" Text="{Binding ComputerInfo.Files, StringFormat='Files In Drive: {0}'}" FontWeight="Normal" FontSize="12" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+
+                <!--GridView Of Drive-->
+            <Border Background="#2D2D30" BorderThickness="2,2,2,2" BorderBrush="SlateGray" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="C:\ File Samples" FontWeight="Bold" FontSize="14" Foreground="#007ACC"/>
+                        <ListView x:Name="DriveListView"
+                                  Height="Auto"
+                                  ItemsSource="{Binding Files}"
+                                  Style="{StaticResource ReadOnlyDashboardList}">
+                            <ListView.View>
+                              <GridView>
+                                <GridView.ColumnHeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="Padding" Value="5"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                    </Style>
+                                </GridView.ColumnHeaderContainerStyle>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
+                                    <GridViewColumn Header="Size" Width="Auto" DisplayMemberBinding="{Binding Size}"/>
+                                    <GridViewColumn Header="Date Modified" Width="Auto" DisplayMemberBinding="{Binding DateModified}"/>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+</Window>
