@@ -24,7 +24,6 @@ namespace PcHealthHub.Model
         {
             MachineName = Environment.MachineName;
             OsVersion = Environment.OSVersion.ToString();
-            Processors = Environment.ProcessorCount.ToString();
 
             LoadDriveInfo(@"C:\");
 
@@ -61,8 +60,7 @@ namespace PcHealthHub.Model
                 drive.TotalSize / (1024.0 * 1024.0 * 1024.0);
 
             FreeSpace =
-                drive.AvailableFreeSpace /
-                (1024.0 * 1024.0 * 1024.0);
+                Math.Round(drive.AvailableFreeSpace / (1024.0 * 1024.0 * 1024.0), 1);
 
             double usedSpace =
                 drive.TotalSize - drive.AvailableFreeSpace;
