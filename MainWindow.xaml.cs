@@ -11,7 +11,9 @@ namespace PcHealthHub
     {
         public ComputerInfo ComputerInfo { get; }
 
-        public ObservableCollection<FileItem> Files { get; }
+        public ObservableCollection<DriveItem> Drives { get; } = [];
+
+        public ObservableCollection<FileItem> Files { get; } = [];
 
         public ObservableCollection<ProcessItem> Processes { get; } = [];
 
@@ -22,9 +24,8 @@ namespace PcHealthHub
             InitializeComponent();
 
             ComputerInfo = new ComputerInfo();
+            Drives = DriveService.GetDrives();
             Files = FileService.GetFiles(@"C:\");
-
-            DataContext = this;
 
             _processTimer = new DispatcherTimer();
             _processTimer.Interval = TimeSpan.FromSeconds(1);
@@ -33,6 +34,7 @@ namespace PcHealthHub
             RefreshProcesses();
 
             _processTimer.Start();
+            DataContext = this;
         }
 
         private void ProcessTimer_Tick(object? sender, EventArgs e)
