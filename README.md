@@ -8,7 +8,7 @@ The application provides a simple system-health dashboard with machine informati
 
 ## Screenshot
 
-<img width="970" height="732" alt="image" src="https://github.com/user-attachments/assets/eefde9b2-ef55-422d-855a-bc3a330f679c" />
+<img width="971" height="727" alt="image" src="https://github.com/user-attachments/assets/b342915b-9184-47a6-a5a8-e41fc594d8bd" />
 
 <img width="966" height="733" alt="image" src="https://github.com/user-attachments/assets/e95ff8bd-9d04-4fb4-9368-47f3f8ff3328" />
 
@@ -169,7 +169,6 @@ PC Health Hub is still an educational and portfolio project.
 
 Current limitations include:
 
-* The file browser currently focuses on `C:\`
 * The dashboard is primarily read-only
 * Some Windows system processes may deny access or terminate while being inspected
 * Error handling can still be expanded
@@ -181,7 +180,6 @@ Current limitations include:
 Possible future improvements include:
 
 * Add a dedicated ViewModel layer
-* Add support for selecting different drives
 * Add total system CPU usage
 * Add total RAM usage
 * Add disk activity monitoring
