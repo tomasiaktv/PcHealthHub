@@ -207,6 +207,7 @@
                     <TextBlock Text="Selected Drive" FontWeight="Bold" FontSize="14" Foreground="#007ACC"/>
                     <ComboBox x:Name="DriveBox"
                               ItemsSource="{Binding Drives}"
+                              SelectionChanged="DriveComboBox_SelectionChanged"
                               DisplayMemberPath="Name"
                               SelectedIndex="0"
                               Width="50"
@@ -285,15 +286,15 @@
                         </Grid>
 
                         <TextBlock x:Name="TxtDriveSpace" Text="{Binding ElementName=DriveBox, Path=SelectedItem.FreeSpace, StringFormat='{}{0} GB Available'}" FontWeight="Normal" FontSize="12" Foreground="White"/>
-                        <TextBlock x:Name="TxtDriveDirectories" Text="{Binding ElementName=DriveBox, Path=SelectedItem.Directories, StringFormat='Directories In Drive: {0}'}" FontWeight="Normal" FontSize="12" Foreground="White"/>
-                        <TextBlock x:Name="TxtDriveFiles" Text="{Binding ElementName=DriveBox, Path=SelectedItem.Files, StringFormat='Files In Drive: {0}'}" FontWeight="Normal" FontSize="12" Foreground="White"/>
+                        <TextBlock x:Name="TxtDriveDirectories" Text="{Binding ElementName=DriveBox, Path=SelectedItem.DirectoryCount, StringFormat='Directories In Drive: {0}'}" FontWeight="Normal" FontSize="12" Foreground="White"/>
+                        <TextBlock x:Name="TxtDriveFiles" Text="{Binding ElementName=DriveBox, Path=SelectedItem.FileCount, StringFormat='Files In Drive: {0}'}" FontWeight="Normal" FontSize="12" Foreground="White"/>
                     </StackPanel>
                 </Border>
 
                 <!--GridView Of Drive-->
             <Border Background="#2D2D30" BorderThickness="2,2,2,2" BorderBrush="SlateGray" Padding="15">
                 <StackPanel>
-                    <TextBlock Text="C:\ File Samples" FontWeight="Bold" FontSize="14" Foreground="#007ACC"/>
+                    <TextBlock Text="{Binding ElementName=DriveBox, Path=SelectedItem.Name, StringFormat='{}{0} File Samples'}" FontWeight="Bold" FontSize="14" Foreground="#007ACC"/>
                         <ListView x:Name="DriveListView"
                                   Height="Auto"
                                   ItemsSource="{Binding Files}"

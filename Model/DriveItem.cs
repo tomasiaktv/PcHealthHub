@@ -9,19 +9,21 @@ namespace PcHealthHub.Model
     public class DriveItem
     {
         public string Name { get; set; } = string.Empty;
+        public string DrivePath { get; set; } = string.Empty;
         public double TotalSpace { get; set; }
         public double FreeSpace { get; set; }
         public double UsedSpace { get; set; }
         public double PercentUsed { get; set; }
 
-        public int Directories { get; set; }
-        public int Files { get; set; }
+        public int DirectoryCount { get; set; }
+        public int FileCount { get; set; }
 
         public DriveItem(DriveInfo di)
         {
             long usedBytes = di.TotalSize - di.AvailableFreeSpace;
 
             Name = di.Name;
+            DrivePath = di.RootDirectory.FullName;
             TotalSpace = di.TotalSize / (1024.0 * 1024.0 * 1024.0);
             FreeSpace = Math.Round(di.AvailableFreeSpace / (1024.0 * 1024.0 * 1024.0), 1);
             UsedSpace = Math.Round(usedBytes / (1024.0 * 1024.0 * 1024.0), 1);
@@ -30,13 +32,13 @@ namespace PcHealthHub.Model
             DirectoryInfo directory = new(di.RootDirectory.FullName);
             try
             {
-                Directories = directory.GetDirectories().Length;
-                Files = directory.GetFiles().Length;
+                DirectoryCount = directory.GetDirectories().Length;
+                FileCount = directory.GetFiles().Length;
             }
             catch
             {
-                Directories = 0;
-                Files = 0;
+                DirectoryCount = 0;
+                FileCount = 0;
             }
         }
     }

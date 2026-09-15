@@ -1,9 +1,10 @@
 ﻿using PcHealthHub.Model;
 using PcHealthHub.Service;
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
-using System.Windows;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PcHealthHub
 {
@@ -25,7 +26,6 @@ namespace PcHealthHub
 
             ComputerInfo = new ComputerInfo();
             Drives = DriveService.GetDrives();
-            Files = FileService.GetFiles(@"C:\");
 
             _processTimer = new DispatcherTimer();
             _processTimer.Interval = TimeSpan.FromSeconds(1);
@@ -74,6 +74,27 @@ namespace PcHealthHub
                 {
                     Processes.RemoveAt(i);
                 }
+            }
+        }
+
+        private void LoadFiles(DriveItem selectedDrive)
+        {
+            Files.Clear();
+
+            var files = FileService.GetFiles(selectedDrive.Name);
+
+            foreach (var file in files)
+            {
+                Files.Add(file);
+            }
+        }
+
+        private void DriveComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox comboBox &&
+                comboBox.SelectedItem is DriveItem selectedDrive)
+            {
+                LoadFiles(selectedDrive);
             }
         }
     }
